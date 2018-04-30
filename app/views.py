@@ -6,7 +6,7 @@ from app import app
 from flask import render_template, redirect, url_for, request, make_response, send_from_directory, flash
 from functools import wraps
 import os.path
-from subprocess import Popen
+from subprocess import Popen, PIPE
 
 
 def check_auth(username, password):
@@ -35,23 +35,23 @@ def auth_required(f):
     return decorated
 
 
-@app.route('/clients/<name>/download', methods=['GET'])
+@app.route('/clients/download/<name>.ovpn', methods=['GET'])
 @auth_required
 def download_client(name):
     return send_from_directory(app.config['CLIENTS_DIR'], '{}.ovpn'.format(name))
 
 
-@app.route('/clients/<name>/delete', methods=['GET'])
+@app.route('/clients/delete/<name>', methods=['GET'])
 @auth_required
 def delete_client(name):
     if not os.path.exists(os.path.join(app.config['CLIENTS_DIR'], '{}.ovpn').format(name)):
         return '<h2>Client not found</h2>', 404
 
     input_file = open(app.config['CLIENT_DELETE_INPUT_FILE'])
-    client_del = Popen([app.config['CLIENT_DELETE'], name], stdin=input_file)
+    client_del = Popen([app.config['CLIENT_DELETE'], name], stdin=input_file, stdout=PIPE)
     client_del.wait()
 
-    if 'error 23' not in ''.join(client_del.stdout.readlines()):
+    if 'error 23' not in b''.join(client_del.stdout.readlines()).decode():
         flash('Something went wrong, probably the client has already been revoked')
 
     return redirect(url_for('new_client'))
@@ -73,10 +73,10 @@ def new_client():
         name = request.form.to_dict()['client_name']
 
         input_file = open(app.config['CLIENT_SETUP_INPUT_FILE'])
-        client_gen = Popen([app.config['CLIENT_SETUP'], name], stdin=input_file)
+        client_gen = Popen([app.config['CLIENT_SETUP'], name], stdin=input_file, stdout=PIPE)
         client_gen.wait()
 
-        if 'Data Base Updated' not in ''.join(client_gen.stdout.readlines()):
+        if 'Data Base Updated' not in b''.join(client_gen.stdout.readlines()).decode():
             flash('Something went wrong, please try another client name')
 
         else:

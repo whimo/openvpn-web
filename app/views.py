@@ -28,20 +28,20 @@ def auth():
 def auth_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
+        authorization = request.authorization
+        if not authorization or not check_auth(authorization.username, authorization.password):
             return auth()
         return f(*args, **kwargs)
     return decorated
 
 
-@app.route('/clients/<str:name>/download', methods=['GET'])
+@app.route('/clients/<name>/download', methods=['GET'])
 @auth_required
 def download_client(name):
     return send_from_directory(app.config['CLIENTS_DIR'], '{}.ovpn'.format(name))
 
 
-@app.route('/clients/<str:name>/delete', methods=['GET'])
+@app.route('/clients/<name>/delete', methods=['GET'])
 @auth_required
 def delete_client(name):
     if not os.path.exists(os.path.join(app.config['CLIENTS_DIR'], '{}.ovpn').format(name)):
@@ -57,7 +57,7 @@ def delete_client(name):
     return redirect(url_for('new_client'))
 
 
-@app.route('/clients/<str:name>', methods=['GET'])
+@app.route('/clients/<name>', methods=['GET'])
 @auth_required
 def get_client(name):
     if not os.path.exists(os.path.join(app.config['CLIENTS_DIR'], '{}.ovpn').format(name)):

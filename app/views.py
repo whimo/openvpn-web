@@ -41,6 +41,22 @@ def download_client(name):
     return send_from_directory(app.config['CLIENTS_DIR'], '{}.ovpn'.format(name))
 
 
+@app.route('/clients/<str:name>/delete', methods=['GET'])
+@auth_required
+def delete_client(name):
+    if not os.path.exists(os.path.join(app.config['CLIENTS_DIR'], '{}.ovpn').format(name)):
+        return '<h2>Client not found</h2>', 404
+
+    input_file = open(app.config['CLIENT_DELETE_INPUT_FILE'])
+    client_del = Popen([app.config['CLIENT_DELETE'], name], stdin=input_file)
+    client_del.wait()
+
+    if 'error 23' not in ''.join(client_del.stdout.readlines()):
+        flash('Something went wrong, probably the client has already been revoked')
+
+    return redirect(url_for('new_client'))
+
+
 @app.route('/clients/<str:name>', methods=['GET'])
 @auth_required
 def get_client(name):

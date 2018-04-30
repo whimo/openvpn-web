@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Client {{ name }}</h3>
+<a href="{{ url_for('download_client', name=name) }}">Download</a>
+<a href="{{ url_for('delete_client', name=name) }}">Delete</a>
+
+{% endblock %}

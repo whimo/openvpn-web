@@ -1,16 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div style="float: left; margin-right: 60px;">
 <h4>New client</h4>
 <form action="{{ url_for('new_client') }}" method="post">
-  <input type="text" name="client_name">
-  <input type="submit" name="submit">
+  <input type="text" name="client_name" placeholder="Enter client name">
+  <input type="submit" name="submit" value="Create">
 </form>
+</div>
 
+<div style="float: left;">
 <h4>Existing client</h4>
 <form action="" method="post">
-  <input type="text" name="client_name">
-  <input type="submit" name="submit">
+  <input type="text" name="client_name" placeholder="Enter client name">
+  <input type="submit" name="submit" value="Find">
 </form>
+</div>
 
 {% endblock %}

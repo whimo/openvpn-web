@@ -47,6 +47,8 @@ def index():
 @app.route('/clients/download/<name>.ovpn', methods=['GET'])
 @auth_required
 def download_client(name):
+    if not os.path.exists(os.path.join(app.config['CLIENTS_DIR'], '{}.ovpn').format(name)):
+        return '<h2>Client not found</h2>', 404
     return send_from_directory(app.config['CLIENTS_DIR'], '{}.ovpn'.format(name))
 
 
@@ -80,6 +82,8 @@ def get_client(name):
 def new_client():
     if request.method == 'POST':
         name = request.form.to_dict()['client_name']
+        if os.path.exists(os.path.join(app.config['CLIENTS_DIR'], '{}.ovpn').format(name)):
+            return '<h2>Client with this name already exists</h2>', 404
 
         input_file = open(app.config['CLIENT_SETUP_INPUT_FILE'])
         client_gen = Popen([app.config['CLIENT_SETUP'], name], stdin=input_file, stdout=PIPE)

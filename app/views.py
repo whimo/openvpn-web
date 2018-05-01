@@ -35,6 +35,15 @@ def auth_required(f):
     return decorated
 
 
+@app.route('/', methods=['GET', 'POST'])
+@auth_required
+def index():
+    if request.method == 'POST':
+        return redirect(url_for('get_client', name=request.form.to_dict()['client_name']))
+
+    return render_template('index.html')
+
+
 @app.route('/clients/download/<name>.ovpn', methods=['GET'])
 @auth_required
 def download_client(name):
@@ -54,7 +63,7 @@ def delete_client(name):
     if 'error 23' not in b''.join(client_del.stdout.readlines()).decode():
         flash('Something went wrong, probably the client has already been revoked')
 
-    return redirect(url_for('new_client'))
+    return redirect(url_for('index'))
 
 
 @app.route('/clients/<name>', methods=['GET'])

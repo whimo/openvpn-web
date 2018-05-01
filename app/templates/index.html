@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4>New client</h4>
+<form action="{{ url_for('new_client') }}" method="post">
+  <input type="text" name="client_name">
+  <input type="submit" name="submit">
+</form>
+
+<h4>Existing client</h4>
+<form action="" method="post">
+  <input type="text" name="client_name">
+  <input type="submit" name="submit">
+</form>
+
+{% endblock %}

@@ -1,8 +1,63 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3>Client {{ name }}</h3>
+<h2>Client {{ name }}</h2>
 <a href="{{ url_for('download_client', name=name) }}" style="margin-right: 40px;"><button><h4>Download</h4></button></a>
 <a href="{{ url_for('delete_client', name=name) }}"><button><h4>Delete</h4></button></a>
+
+<h3>Setup instructions:</h3>
+<details>
+  <summary>Windows</summary>
+  <a href="https://openvpn.net/index.php/open-source/downloads.html"><h4>Windows app</h4></a>
+  <ul>
+    <li>Install the app</li>
+    <li>Copy <b>{{ name }}.ovpn</b> to <i>C:\Program Files\OpenVPN\config</i></li>
+    <li>When you launch OpenVPN, it will automatically find the profile and make it available</li>
+    <li>Once OpenVPN is started, initiate a connection by going into the system tray applet and right-clicking on the OpenVPN applet icon</li>
+    <li>Select <b>{{ name }}</b> at the top of the menu and choose <i>Connect</i></li>
+  </ul>
+</details>
+
+<details>
+  <summary>Linux</summary>
+  You don't need instructions, haha
+</details>
+
+<details>
+  <summary>OS X</summary>
+  <a href="https://tunnelblick.net/downloads.html"><h4>OS X app</h4></a>
+  <ul>
+    <li>Install the app</li>
+    <li>Open a Finder window and double-click <b>{{ name }}.ovpn</b></li>
+    <li>Launch Tunnelblick from the Applications menu</li>
+    <li>Click on the icon in the menu bar at the top right of the screen, then the <i>Connect</i> menu item and choose <b>{{ name }}</b></li>
+  </ul>
+</details>
+
+<details>
+  <summary>Android</summary>
+  <a href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn"><h4>Android app</h4></a>
+  <ul>
+    <li>Install the app</li>
+    <li>Launch the app and select <i>OVPN Profile</i> at the bottom</li>
+    <li>Tap the plus sign at the bottom and find the <b>{{ name }}.ovpn</b> file</li>
+    <li>Tap <i>Import</i>, then <i>Add</i></li>
+    <li>Activate the connection by sliding the button next to your profile</li>
+  </ul>
+</details>
+
+<details>
+  <summary>iOS</summary>
+  <a href="https://itunes.apple.com/app/openvpn-connect/id590379981"><h4>iOS app</h4></a>
+  <ul>
+    <li>Install the app</li>
+    <li>Connect your device to a computer</li>
+    <li>Open iTunes on the computer and click on <i>iPhone (iPad etc.) > apps</i></li>
+    <li>Scroll down to the <i>File Sharing</i> section and click the OpenVPN app</li>
+    <li>Drag the <b>{{ name }}.ovpn</b> file to the <i>OpenVPN Documents</i> window</li>
+    <li>Launch the OpenVPN app on the iPhone. There will be a notification that a new profile is ready to import. Tap the plus sign to import it</li>
+    <li>Activate the connection by sliding the button</li>
+  </ul>
+</details>
 
 {% endblock %}
